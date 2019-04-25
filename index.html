@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -117,25 +117,25 @@ border-bottom: 0px !important;
 		.obenright {
 			/*border-right: none;*/
 		}
-		#reihe {
+		#line {
 			font-weight: bold;
 			text-align: center;
 			font-size: 150%;
 
 		}
-		#ausgewählt {
+		#selected {
 			font-weight: bold;
 			text-align: center;
 		}
-		.tugend {	
+		.virtue {	
 			/*font-family: 'Playfair Display', serif;*/
 			color:green;
 		}
-		.laster {
+		.vices {
 			/*font-family: 'UnifrakturMaguntia', cursive;*/
 			color:red;
 		}
-		.unentschieden {
+		.draw {
 			/*font-family: 'UnifrakturMaguntia', cursive;*/
 			/*color:gray;*/
 			/*alpha:0.5;*/
@@ -251,7 +251,7 @@ font-weight: normal;
 	<h1>UWOG</h1>
 	<p>
 
-<table id="haupttabelle">
+<table id="maintable">
 		<tr>
 		<td class="emside">
 		</td>
@@ -316,32 +316,32 @@ font-weight: normal;
 <script type="text/javascript">
 	var state=[];
 
-	var agent_zahl = 4;
-	var gebot_zahl = 14;
-	var vor_zeile_zahl = 2;
+	var agent_num = 4;
+	var command_num = 14;
+	var front_line_num = 2;
 
 	var emoji = ['🤡','🤖','💩','👽'];
 	var todemoji='💀';
 	var starthealth=4;
 
 
-	var gutSchaltfläche;
-	var böseSchaltfläche;
-	var neuSchaltfläche;
+	var goodButton;
+	var badButton;
+	var newGameButton;
 
 
-	// var tugenden = [
+	// var virtues = [
 	// // 'Demut','Mildtätigkeit','Keuschheit','Geduld','Mäßigung','Wohlwollen','Fleiß'
 	// // 'humilitas','caritas','castitas','patientia','temperantia','humanitas','industria'
 	// ];
-	// var laster = [
+	// var vices = [
 	// // 'Hochmut','Habgier','Wollust','Zorn','Völlerei','Neid','Faulheit'
 	// ];
 
-	var tugenden = ['Faith','Valour','Charity','Diligence','Patience','Kindness','Humility'];
+	var virtues = ['Faith','Valour','Charity','Diligence','Patience','Kindness','Humility'];
 
-	var laster = ['Murder','Bestiality','Sodomy','Theft','Stalking','Vulgarity','Rebellion'];
-	var worte = tugenden.concat(laster);
+	var vices = ['Murder','Bestiality','Sodomy','Theft','Stalking','Vulgarity','Rebellion'];
+	var words = virtues.concat(vices);
 	
 	function getHighScore(){
 		try {
@@ -366,40 +366,40 @@ font-weight: normal;
 		}
 	}
 
-	function tugendsein(w){
-		return tugenden.indexOf(w)>=0;
+	function isVirtuous(w){
+		return virtues.indexOf(w)>=0;
 	}
 
-	function getWort(){
-		return worte[Math.floor(Math.random()*worte.length)];
+	function getWord(){
+		return words[Math.floor(Math.random()*words.length)];
 	}
 
-	function befehlWert(agent,wort){
-		// return (wort.length%3)-1;
+	function commandWorth(agent,word){
+		// return (word.length%3)-1;
 
-		for (var i=0;i<gebot_zahl;i++){
-			var gebot = state.gebote[agent][i];
-			if (gebot.length===0){
+		for (var i=0;i<command_num;i++){
+			var commandment = state.commandments[agent][i];
+			if (commandment.length===0){
 				continue;
 			}
-			if (gebot[1]===0){
+			if (commandment[1]===0){
 				continue;
 			}
-			if (gebot[0]==wort){
-				return gebot[1];
+			if (commandment[0]==word){
+				return commandment[1];
 			}
 		}
 		return 0;
 	}
 
-	function stellZustand(){
+	function setState(){
 
 		document.getElementById("scoretxt").innerHTML=state.score;
 
-		for (var i=0;i<agent_zahl;i++){
+		for (var i=0;i<agent_num;i++){
 			var elem = document.getElementById('health'+i);
 			if (state.healths[i]>0){
-				if (state.healths[i]<3 &&!verloren()){
+				if (state.healths[i]<3 &&!lost()){
 					elem.innerHTML=`${emoji[i]} <span class="pulsate">${state.healths[i]}</span>`;
 				} else {
 					elem.innerHTML=`${emoji[i]} ${state.healths[i]}`;										
@@ -419,14 +419,14 @@ font-weight: normal;
 			}
 		}
 
-		for (var i=0;i<agent_zahl;i++){
-			for (var j=0;j<vor_zeile_zahl;j++){
+		for (var i=0;i<agent_num;i++){
+			for (var j=0;j<front_line_num;j++){
 				var elem = document.getElementById(`v${j}c${i}`);
-				var wort = state.vor[i][j];
-				elem.innerHTML=hüllWort(wort,i);
+				var word = state.front[i][j];
+				elem.innerHTML=euphemism(word,i);
 
-				var wert = befehlWert(i,wort);
-				switch(wert){
+				var value = commandWorth(i,word);
+				switch(value){
 					case -1:
 					elem.className="evil";
 					break;
@@ -440,48 +440,48 @@ font-weight: normal;
 			}
 		}
 
-		for (var i=0;i<agent_zahl;i++){
-			for (var j=0;j<gebot_zahl;j++){
+		for (var i=0;i<agent_num;i++){
+			for (var j=0;j<command_num;j++){
 				var elem = document.getElementById(`g${j}c${i}`);
-				var gebot = state.gebote[i][j];
-				if (gebot.length===0){
+				var commandment = state.commandments[i][j];
+				if (commandment.length===0){
 					elem.innerHTML="&nbsp;";
 					elem.className="";
 					continue;
 				}
-				var wert = befehlWert(i,gebot[0]);
-				switch(wert){
+				var value = commandWorth(i,commandment[0]);
+				switch(value){
 					case -1:
-					elem.className="gebotzelle evil";
+					elem.className="commandment cell evil";
 					break;
 					case 0:
-					elem.className="gebotzelle unentschieden";
+					elem.className="commandment cell draw";
 					break;
 					case 1:
-					elem.className="gebotzelle good";
+					elem.className="commandment cell good";
 					break;
 				}
-				elem.innerHTML=hüllWort(gebot[0],-1);
+				elem.innerHTML=euphemism(commandment[0],-1);
 			}
 		}
 
-		// state.gebote=[];
-		// for (var i=0;i<agent_zahl;i++){
-		// 	state.gebote.push([]);
-		// 	for (var j=0;j<gebot_zahl;j++){
-		// 		state.gebote[i].push(getWort());
+		// state.commandments=[];
+		// for (var i=0;i<agent_num;i++){
+		// 	state.commandments.push([]);
+		// 	for (var j=0;j<command_num;j++){
+		// 		state.commandments[i].push(getWord());
 		// 	}
 		// }
 
-		// state.reihe=[];
-		for (var i=0;i<agent_zahl;i++){
+		// state.line=[];
+		for (var i=0;i<agent_num;i++){
 			var elem = document.getElementById(`agw${i}`);
-			var wort = state.reihe[i];
-			elem.innerHTML=hüllWort(wort,i);
+			var word = state.line[i];
+			elem.innerHTML=euphemism(word,i);
 
 
-				var wert = befehlWert(i,wort);
-				switch(wert){
+				var value = commandWorth(i,word);
+				switch(value){
 					case -1:
 					elem.className="evil";
 					break;
@@ -493,12 +493,12 @@ font-weight: normal;
 					break;
 				}
 
-		// 	state.reihe.push(getWort());
+		// 	state.line.push(getWord());
 		}
 
-		if (verloren()){			
-			gutSchaltfläche.disabled=true;
-			böseSchaltfläche.disabled=true;
+		if (lost()){			
+			goodButton.disabled=true;
+			badButton.disabled=true;
 			var hs = getHighScore();
 			var text = `Game over.\nYour score was ${state.score} :)`;
 			if (hs<state.score){
@@ -517,14 +517,14 @@ font-weight: normal;
 	var highlightrow2=-1;
 	var stylesheet = document.styleSheets[0];
 
-	function vor_onmouseenter(zeile,agent){
-		var wort = state.vor[agent][zeile];
-		var wortindex = worte.indexOf(wort);
-		highlightrow=stylesheet.insertRule(`.gebotrow${wortindex} .gebotzelle{ } `);
-		highlightrow2=stylesheet.insertRule(`.gebotrow${wortindex} { border: 1px solid black; background-color:white; }`);
+	function after_onmouseenter(row,agent){
+		var word = state.front[agent][row];
+		var wortindex = words.indexOf(word);
+		highlightrow=stylesheet.insertRule(`.commandmentrow${wortindex} .commandment cell{ } `);
+		highlightrow2=stylesheet.insertRule(`.commandmentrow${wortindex} { border: 1px solid black; background-color:white; }`);
 	}
 	
-	function vor_onmouseleave(agent,zeile){
+	function after_onmouseleave(agent,row){
 		if (highlightrow>=0){
 			stylesheet.deleteRule(highlightrow);
 			stylesheet.deleteRule(highlightrow2);
@@ -535,10 +535,10 @@ font-weight: normal;
 
 	function agw_onmouseenter(agent){
 
-		var wort = state.reihe[agent];
-		var wortindex = worte.indexOf(wort);
-		highlightrow=stylesheet.insertRule(`.gebotrow${wortindex} .gebotzelle{ } `);
-			highlightrow2=stylesheet.insertRule(`.gebotrow${wortindex} { border: 1px solid black; background-color:white; }`);
+		var word = state.line[agent];
+		var wortindex = words.indexOf(word);
+		highlightrow=stylesheet.insertRule(`.commandmentrow${wortindex} .commandment cell{ } `);
+			highlightrow2=stylesheet.insertRule(`.commandmentrow${wortindex} { border: 1px solid black; background-color:white; }`);
 	}
 	
 	function agw_onmouseleave(i,j){
@@ -549,50 +549,50 @@ font-weight: normal;
 		}
 	}
 
-	function generiereTabelle(){
+	function generateTable(){
 
-		var table = document.getElementById('haupttabelle');
+		var table = document.getElementById('maintable');
 
 		state={};
 		state.score=0;
 		state.healths=[];
 		state.oldhealths=[];
-		for (var i=0;i<agent_zahl;i++){
+		for (var i=0;i<agent_num;i++){
 			state.healths.push(starthealth);
 			state.oldhealths.push(starthealth);
 		}
 
-		state.vor=[];
-		for (var i=0;i<agent_zahl;i++){
-			state.vor.push([]);
-			for (var j=0;j<gebot_zahl;j++){
-				state.vor[i].push(getWort());
+		state.front=[];
+		for (var i=0;i<agent_num;i++){
+			state.front.push([]);
+			for (var j=0;j<command_num;j++){
+				state.front[i].push(getWord());
 			}
 		}
 
-		state.gebote=[];
-		for (var i=0;i<agent_zahl;i++){
-			state.gebote.push([]);
-			for (var j=0;j<gebot_zahl;j++){
-				state.gebote[i].push([worte[j],0]);
+		state.commandments=[];
+		for (var i=0;i<agent_num;i++){
+			state.commandments.push([]);
+			for (var j=0;j<command_num;j++){
+				state.commandments[i].push([words[j],0]);
 			}
 		}
 
-		state.reihe=[];
-		for (var i=0;i<agent_zahl;i++){
-			state.reihe.push(getWort());
+		state.line=[];
+		for (var i=0;i<agent_num;i++){
+			state.line.push(getWord());
 		}
 
 		var inner = "";
 
-		for (var i=0;i<vor_zeile_zahl;i++){
+		for (var i=0;i<front_line_num;i++){
 			inner += `
 	<tr>
 		<td class="emside">
 		</td>`
 
-			for (var j=0;j<agent_zahl;j++){
-				inner +=`<td  onmouseenter="vor_onmouseenter(${i},${j})" onmouseleave="vor_onmouseleave(${i},${j})" id="v${i}c${j}">
+			for (var j=0;j<agent_num;j++){
+				inner +=`<td  onmouseenter="after_onmouseenter(${i},${j})" onmouseleave="after_onmouseleave(${i},${j})" id="v${i}c${j}">
 			platzhalter
 		</td>`
 			}
@@ -605,13 +605,13 @@ font-weight: normal;
 		}
 
 		inner+= `
-	<tr id="ausgewählt">
+	<tr id="selected">
 		<td class="side">
 			->
 		</td>`
 
 
-			for (var j=0;j<agent_zahl;j++){
+			for (var j=0;j<agent_num;j++){
 				inner +=`<td  onmouseenter="agw_onmouseenter(${j})" onmouseleave="agw_onmouseleave(${i},${j})"  id="agw${j}">
 			platzhalter
 		</td>`
@@ -624,12 +624,12 @@ font-weight: normal;
 	</tr>`
 
 		inner+=`
-	<tr class="status" id ="reihe">
+	<tr class="status" id ="line">
 		<td class="emside">
 		</td>`
 
 
-			for (var j=0;j<agent_zahl;j++){
+			for (var j=0;j<agent_num;j++){
 				inner +=`
 		<td id="health${j}">
 			666
@@ -643,13 +643,13 @@ font-weight: normal;
 	</tr>`
 
 
-		for (var i=0;i<gebot_zahl;i++){
+		for (var i=0;i<command_num;i++){
 			inner += `
-	<tr class="gebotrow${i}">
+	<tr class="commandmentrow${i}">
 		<td class="emside">
 		</td>`
 
-			for (var j=0;j<agent_zahl;j++){
+			for (var j=0;j<agent_num;j++){
 				inner +=`<td id="g${i}c${j}">
 			platzhalter
 		</td>`
@@ -664,54 +664,54 @@ font-weight: normal;
 		table.innerHTML +=  inner;
 	}
 
-	function sollAnimieren(){		
-		if (verloren()){
+	function shouldAnimate(){		
+		if (lost()){
 			return false;
 		}
 
-		for (var i=0;i<agent_zahl;i++){
-			var wort = state.reihe[i];
-			if (befehlWert(i,wort)!==0){
+		for (var i=0;i<agent_num;i++){
+			var word = state.line[i];
+			if (commandWorth(i,word)!==0){
 				return true;
 			}
 		}
 	}
 
 	function tueTick(){
-		for (var i=0;i<agent_zahl;i++){
-			var wort = state.reihe[i];
-			if (befehlWert(i,wort)!==0){
-				var wert = befehlWert(i,wort);
-				befehlSpalte(i,wert,false);
+		for (var i=0;i<agent_num;i++){
+			var word = state.line[i];
+			if (commandWorth(i,word)!==0){
+				var value = commandWorth(i,word);
+				commandColumn(i,value,false);
 			}
 		}
 
-		if (voll()&& verloren()===false){
+		if (full()&& lost()===false){
 			state.score++;		
 		}
 
 
-		if (sollAnimieren()){
-			fangMitAutoAn();
+		if (shouldAnimate()){
+			startWithAnimation();
 		} else {
-			gutSchaltfläche.disabled=false;
-			böseSchaltfläche.disabled=false;
-			neuSchaltfläche.disabled=false;
+			goodButton.disabled=false;
+			badButton.disabled=false;
+			newGameButton.disabled=false;
 		}
 
-		stellZustand();
+		setState();
 	}
 
-	function fangMitAutoAn(){
-		gutSchaltfläche.disabled=true;
-		böseSchaltfläche.disabled=true;
-		neuSchaltfläche.disabled=true;
+	function startWithAnimation(){
+		goodButton.disabled=true;
+		badButton.disabled=true;
+		newGameButton.disabled=true;
 
 		setTimeout(tueTick,500);
 	}
 
-	function verloren(){
-		for (var i=0;i<agent_zahl;i++){
+	function lost(){
+		for (var i=0;i<agent_num;i++){
 			if (state.healths[i]<=0){
 				return true;
 			}
@@ -719,10 +719,10 @@ font-weight: normal;
 		return false;
 	}
 
-	function voll(){
-		for (var i=0;i<agent_zahl;i++){
-			for (var j=0;j<gebot_zahl;j++){
-				if (state.gebote[i][j][1]===0){
+	function full(){
+		for (var i=0;i<agent_num;i++){
+			for (var j=0;j<command_num;j++){
+				if (state.commandments[i][j][1]===0){
 					return false;
 				}
 			}
@@ -730,64 +730,64 @@ font-weight: normal;
 		return true;
 	}
 
-	function befehl(wert){
-		for (var i=0;i<agent_zahl;i++){
-			befehlSpalte(i,wert,true);
+	function commandment(value){
+		for (var i=0;i<agent_num;i++){
+			commandColumn(i,value,true);
 		}
 		
-		if (sollAnimieren()){
-			fangMitAutoAn();
+		if (shouldAnimate()){
+			startWithAnimation();
 		}
 
-		if (!verloren()){
+		if (!lost()){
 			state.score++;
 		}
-		stellZustand();
+		setState();
 	}
 
-	function befehlSpalte(agent,wert,hinzufügen){
+	function commandColumn(agent,value,add){
 		var i=agent;
-		//1 bewege gebote hinunter
+		//1 move down commandments
 
-		// if (hinzufügen){
-		// 	for (var j=gebot_zahl-1;j>=0;j--){
-		// 		state.gebote[i][j+1]=state.gebote[i][j];
+		// if (add){
+		// 	for (var j=command_num-1;j>=0;j--){
+		// 		state.commandments[i][j+1]=state.commandments[i][j];
 		// 	}
 		// }
 
-		//2 bewege die aktive Zeile hinunter + set wert
+		//2 move the active line down + set value
 
-		var gebotzeil = worte.indexOf(state.reihe[i]);
-		if (hinzufügen){
-			state.gebote[i][gebotzeil][1]=wert;
+		var commandmentLine = words.indexOf(state.line[i]);
+		if (add){
+			state.commandments[i][commandmentLine][1]=value;
 		}
 
 			var delta=0;
-			if (tugendsein(state.reihe[i])){
-				delta=wert;
+			if (isVirtuous(state.line[i])){
+				delta=value;
 			} else {
-				delta=-wert;
+				delta=-value;
 			}
 
 			{
-				var wort = 	state.reihe[i];
+				var word = 	state.line[i];
 
 				//for every other character
-				for (var o=0;o<agent_zahl;o++){
+				for (var o=0;o<agent_num;o++){
 					if (o===agent){
 						continue;
 					}
 
-					var tugend = tugendsein(wort);
-					var o_does = befehlWert(o,wort);
+					var virtue = isVirtuous(word);
+					var o_does = commandWorth(o,word);
 					
 					 // if you fail to do something good that they value, they will punish you
-					if (wert==-1 && tugend===true && o_does===1){
+					if (value==-1 && virtue===true && o_does===1){
 						delta-=1;
 					}
 
 					//if you do something evil that they are not allowed to do, they will punish you
-					if (wert==1 && tugend===false && o_does===-1){
+					if (value==1 && virtue===false && o_does===-1){
 						delta-=1;
 					}
 				}
@@ -797,40 +797,40 @@ font-weight: normal;
 				}
 			}
 
-		//3 bewege die Vorschauzeile hinunter
+		//3 move down the preview line
 
-			state.reihe[i]=state.vor[i][vor_zeile_zahl-1];
+			state.line[i]=state.front[i][front_line_num-1];
 
 
-		//4 bewege Vorschauzeile hinunter
+		//4 move preview line down
 
-			for (var j=vor_zeile_zahl-1;j>=0;j--){
-				state.vor[i][j+1]=state.vor[i][j];
+			for (var j=front_line_num-1;j>=0;j--){
+				state.front[i][j+1]=state.front[i][j];
 			}
 
-		//5 neuzeichnen
+		//5 draw again
 
-			state.vor[i][0]=getWort();
+			state.front[i][0]=getWord();
 
 
-		//6 mit der animation anfangen, wenn relevant
+		//6 start animation if relevant
 	}
 
-	function aufGutKlicken(){
-		if (gutSchaltfläche.disabled){
+	function clickOnGood(){
+		if (goodButton.disabled){
 			return;
 		}
-		befehl(1);
+		commandment(1);
 	}
 	
-	function aufBöseKlicken(){
-		if (böseSchaltfläche.disabled){
+	function clickOnBad(){
+		if (badButton.disabled){
 			return;
 		}
-		befehl(-1);
+		commandment(-1);
 	}
 	
-	function aufNeuKlicken(){
+	function clickOnNew(){
 		location.reload();
 	}
 
@@ -842,29 +842,29 @@ font-weight: normal;
 		}		
 	}
 
-	function hüllWort(w,agent,tooltiperlauben){
-		var tugend = tugendsein(w);
+	function euphemism(w,agent,tooltiperlauben){
+		var virtue = isVirtuous(w);
 		tooltiperlauben=false;//agent>=0;
 
 		if (agent>=0){
 			var delta=0;
 
 			var disapproves=[];
-			for (var o=0;o<agent_zahl;o++){
+			for (var o=0;o<agent_num;o++){
 				if (o===agent){
 					continue;
 				}
 
-				var o_does = befehlWert(o,w);
+				var o_does = commandWorth(o,w);
 				
 				 // if you fail to do something good that they value, they will punish you
-				if (tugend===true && o_does===1){
+				if (virtue===true && o_does===1){
 					delta++;
 					disapproves.push(emoji[o]);
 				}
 
 				//if you do something evil that they are not allowed to do, they will punish you
-				if (tugend===false && o_does===-1){
+				if (virtue===false && o_does===-1){
 					delta++;
 					disapproves.push(emoji[o]);
 				}
@@ -872,11 +872,11 @@ font-weight: normal;
 
 
 
-			var wortindex = worte.indexOf(w);
-			var compulsory = state.gebote[agent][wortindex][1];
+			var wortindex = words.indexOf(w);
+			var compulsory = state.commandments[agent][wortindex][1];
 			var tooltip="";
 
-			var bigeffect = signInt(-1-disapproves.length)+` = -1 (${tugend?"virtue":"vice"})`;
+			var bigeffect = signInt(-1-disapproves.length)+` = -1 (${virtue?"virtue":"vice"})`;
 			if (disapproves.length===1){
 				bigeffect+=` -1 (${disapproves[0]} disapproves)`				
 			} else if (disapproves.length>1){
@@ -888,10 +888,10 @@ font-weight: normal;
 			}
 
 			if (disapproves.length===0){
-				bigeffect = `-1 (${tugend?"virtue":"vice"})`;
+				bigeffect = `-1 (${virtue?"virtue":"vice"})`;
 			}
 
-			if (tugend){
+			if (virtue){
 				tooltip = "Do: +1 (virtue)\nDon't do: "+bigeffect;
 			} else {
 				tooltip = "Do: "+bigeffect+"\nDon't do: +1 (vice)";
@@ -913,31 +913,31 @@ font-weight: normal;
 			}
 		}
 
-		if (tugend){
-			w = `<span class="tugend ${(tooltiperlauben===true)?"tooltip":""}">${w}</span>`;
+		if (virtue){
+			w = `<span class="virtue ${(tooltiperlauben===true)?"tooltip":""}">${w}</span>`;
 		} else {
-			w = `<span class="laster ${(tooltiperlauben===true)?"tooltip":""}">${w}</span>`;
+			w = `<span class="vices ${(tooltiperlauben===true)?"tooltip":""}">${w}</span>`;
 		} 
 
 		return w; 
 	}
 
-	function schließSchaltflächeAn(){
+	function closeButtons(){
 
-		gutSchaltfläche = document.getElementById('goodbutton');
-		böseSchaltfläche = document.getElementById('badbutton');
-		neuSchaltfläche = document.getElementById('newgamebutton');
+		goodButton = document.getElementById('goodbutton');
+		badButton = document.getElementById('badbutton');
+		newGameButton = document.getElementById('newgamebutton');
 
-		gutSchaltfläche.addEventListener("click", aufGutKlicken);
-		böseSchaltfläche.addEventListener("click", aufBöseKlicken);
-		neuSchaltfläche.addEventListener("click", aufNeuKlicken);
+		goodButton.addEventListener("click", clickOnGood);
+		badButton.addEventListener("click", clickOnBad);
+		newGameButton.addEventListener("click", clickOnNew);
 
 	}
 
 
-	generiereTabelle();
-	stellZustand();
-	schließSchaltflächeAn();
+	generateTable();
+	setState();
+	closeButtons();
 
 </script>
 </body>

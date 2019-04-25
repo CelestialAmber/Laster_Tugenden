@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v3.8.5">
-  <title>Allgemeine Befehle der Göttin</title>
+    <title>General Commands of the Goddess</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/navbar-bottom/">
 
@@ -80,25 +80,25 @@
     .obenright {
       /*border-right: none;*/
     }
-    #reihe {
+    #line {
       font-weight: bold;
       text-align: center;
       font-size: 150%;
 
     }
-    #ausgewählt {
+    #selected {
       font-weight: bold;
       text-align: center;
     }
-    .tugend { 
+    .virtue { 
       /*font-family: 'Playfair Display', serif;*/
       color:green;
     }
-    .laster {
+    .vices {
       /*font-family: 'UnifrakturMaguntia', cursive;*/
       color:red;
     }
-    .unentschieden {
+    .draw {
       /*font-family: 'UnifrakturMaguntia', cursive;*/
       /*color:gray;*/
       /*alpha:0.5;*/
@@ -160,10 +160,10 @@
 <main role="main" class="flex-shrink-0">
   <div class="container">
 
-    <h1>Allgemeine Befehle der Göttin</h1>
+    <h1>General Commandments of the Goddess</h1>
   <p>
 
-<table class="table table-condensed table-bordered" id="haupttabelle">
+<table class="table table-condensed table-bordered" id="maintable">
     <tr>
     <td class="emside">
     </td>
@@ -225,74 +225,74 @@
 <script type="text/javascript">
   var state=[];
 
-  var agent_zahl = 4;
-  var gebot_zahl = 14;
-  var vor_zeile_zahl = 2;
+  var agent_num = 4;
+  var command_num = 14;
+  var front_line_num = 2;
 
   var emoji = ['🧜‍♂️','🦸‍♀️','🧛‍♂️','🧝‍♀️'];
   var starthealth=3;
 
 
-  var gutSchaltfläche;
-  var böseSchaltfläche;
-  var neuSchaltfläche;
+  var goodButton;
+  var badButton;
+  var newGameButton;
 
 
-  // var tugenden = [
+  // var virtues = [
   // // 'Demut','Mildtätigkeit','Keuschheit','Geduld','Mäßigung','Wohlwollen','Fleiß'
   // // 'humilitas','caritas','castitas','patientia','temperantia','humanitas','industria'
   // ];
-  // var laster = [
+  // var vices = [
   // // 'Hochmut','Habgier','Wollust','Zorn','Völlerei','Neid','Faulheit'
   // ];
 
-  var tugenden = ['Chastity','Temperance','Charity','Diligence','Patience','Kindness','Humility'];
+  var virtues = ['Chastity','Temperance','Charity','Diligence','Patience','Kindness','Humility'];
 
-  var laster = ['Murder','Apostasy','Bestiality','Theft','Sodomy','Witchcraft','Rebellion'];
-  var worte = tugenden.concat(laster);
+  var vices = ['Murder','Apostasy','Bestiality','Theft','Sodomy','Witchcraft','Rebellion'];
+  var words = virtues.concat(vices);
   
-  function tugendsein(w){
-    return tugenden.indexOf(w)>=0;
+  function isVirtuous(w){
+    return virtues.indexOf(w)>=0;
   }
 
-  function getWort(){
-    return worte[Math.floor(Math.random()*worte.length)];
+  function getWord(){
+    return words[Math.floor(Math.random()*words.length)];
   }
 
-  function befehlWert(agent,wort){
-    // return (wort.length%3)-1;
+  function commandValue(agent,word){
+    // return (word.length%3)-1;
 
-    for (var i=0;i<gebot_zahl;i++){
-      var gebot = state.gebote[agent][i];
-      if (gebot.length===0){
+    for (var i=0;i<command_num;i++){
+      var commandment = state.commandments[agent][i];
+      if (commandment.length===0){
         continue;
       }
-      if (gebot[1]===0){
+      if (commandment[1]===0){
         continue;
       }
-      if (gebot[0]==wort){
-        return gebot[1];
+      if (commandment[0]==word){
+        return commandment[1];
       }
     }
     return 0;
   }
 
-  function stellZustand(){
+  function setState(){
 
-    for (var i=0;i<agent_zahl;i++){
+    for (var i=0;i<agent_num;i++){
       var elem = document.getElementById('health'+i);
       elem.innerHTML=emoji[i]+" "+ state.healths[i];
     }
 
-    for (var i=0;i<agent_zahl;i++){
-      for (var j=0;j<vor_zeile_zahl;j++){
+    for (var i=0;i<agent_num;i++){
+      for (var j=0;j<front_line_num;j++){
         var elem = document.getElementById(`v${j}c${i}`);
         console.log(i,j);
-        var wort = state.vor[i][j];
-        elem.innerHTML=hüllWort(wort,i);
+        var word = state.front[i][j];
+        elem.innerHTML=euphemism(word,i);
 
-        var wert = befehlWert(i,wort);
-        switch(wert){
+        var commandValueVar = commandValue(i,word);
+        switch(commandValueVar){
           case -1:
           elem.className="evil";
           break;
@@ -306,49 +306,49 @@
       }
     }
 
-    for (var i=0;i<agent_zahl;i++){
-      for (var j=0;j<gebot_zahl;j++){
+    for (var i=0;i<agent_num;i++){
+      for (var j=0;j<command_num;j++){
         var elem = document.getElementById(`g${j}c${i}`);
         console.log(i,j);
-        var gebot = state.gebote[i][j];
-        if (gebot.length===0){
+        var commandment = state.commandments[i][j];
+        if (commandment.length===0){
           elem.innerHTML="&nbsp;";
           elem.className="";
           continue;
         }
-        var wert = befehlWert(i,gebot[0]);
-        switch(wert){
+        var commandValueVar = commandValue(i,commandment[0]);
+        switch(commandValueVar){
           case -1:
           elem.className="evil";
           break;
           case 0:
-          elem.className="unentschieden";
+          elem.className="draw";
           break;
           case 1:
           elem.className="good";
           break;
         }
-        elem.innerHTML=hüllWort(gebot[0],-1);
+        elem.innerHTML=euphemism(commandment[0],-1);
       }
     }
 
-    // state.gebote=[];
-    // for (var i=0;i<agent_zahl;i++){
-    //  state.gebote.push([]);
-    //  for (var j=0;j<gebot_zahl;j++){
-    //    state.gebote[i].push(getWort());
+    // state.commandments=[];
+    // for (var i=0;i<agent_num;i++){
+    //  state.commandments.push([]);
+    //  for (var j=0;j<command_num;j++){
+    //    state.commandments[i].push(getWord());
     //  }
     // }
 
-    // state.reihe=[];
-    for (var i=0;i<agent_zahl;i++){
+    // state.line=[];
+    for (var i=0;i<agent_num;i++){
       var elem = document.getElementById(`agw${i}`);
-      var wort = state.reihe[i];
-      elem.innerHTML=hüllWort(wort,i);
+      var word = state.line[i];
+      elem.innerHTML=euphemism(word,i);
 
 
-        var wert = befehlWert(i,wort);
-        switch(wert){
+        var commandValueVar = commandValue(i,word);
+        switch(commandValueVar){
           case -1:
           elem.className="evil";
           break;
@@ -360,50 +360,50 @@
           break;
         }
 
-    //  state.reihe.push(getWort());
+    //  state.line.push(getWord());
     }
   }
 
-  function generiereTabelle(){
+  function generateTable(){
 
-    var table = document.getElementById('haupttabelle');
+    var table = document.getElementById('maintable');
 
     state={};
     state.healths=[];
-    for (var i=0;i<agent_zahl;i++){
+    for (var i=0;i<agent_num;i++){
       state.healths.push(starthealth);
     }
 
-    state.vor=[];
-    for (var i=0;i<agent_zahl;i++){
-      state.vor.push([]);
-      for (var j=0;j<gebot_zahl;j++){
-        state.vor[i].push(getWort());
+    state.front=[];
+    for (var i=0;i<agent_num;i++){
+      state.front.push([]);
+      for (var j=0;j<command_num;j++){
+        state.front[i].push(getWord());
       }
     }
 
-    state.gebote=[];
-    for (var i=0;i<agent_zahl;i++){
-      state.gebote.push([]);
-      for (var j=0;j<gebot_zahl;j++){
-        state.gebote[i].push([worte[j],0]);
+    state.commandments=[];
+    for (var i=0;i<agent_num;i++){
+      state.commandments.push([]);
+      for (var j=0;j<command_num;j++){
+        state.commandments[i].push([words[j],0]);
       }
     }
 
-    state.reihe=[];
-    for (var i=0;i<agent_zahl;i++){
-      state.reihe.push(getWort());
+    state.line=[];
+    for (var i=0;i<agent_num;i++){
+      state.line.push(getWord());
     }
 
     var inner = "";
 
-    for (var i=0;i<vor_zeile_zahl;i++){
+    for (var i=0;i<front_line_num;i++){
       inner += `
   <tr>
     <td class="emside">
     </td>`
 
-      for (var j=0;j<agent_zahl;j++){
+      for (var j=0;j<agent_num;j++){
         inner +=`<td id="v${i}c${j}">
       platzhalter
     </td>`
@@ -417,13 +417,13 @@
     }
 
     inner+= `
-  <tr id="ausgewählt">
+  <tr id="selected">
     <td class="side">
       ->
     </td>`
 
 
-      for (var j=0;j<agent_zahl;j++){
+      for (var j=0;j<agent_num;j++){
         inner +=`<td id="agw${j}">
       platzhalter
     </td>`
@@ -436,12 +436,12 @@
   </tr>`
 
     inner+=`
-  <tr class="status" id ="reihe">
+  <tr class="status" id ="line">
     <td class="emside">
     </td>`
 
 
-      for (var j=0;j<agent_zahl;j++){
+      for (var j=0;j<agent_num;j++){
         inner +=`
     <td id="health${j}">
       666
@@ -455,13 +455,13 @@
   </tr>`
 
 
-    for (var i=0;i<gebot_zahl;i++){
+    for (var i=0;i<command_num;i++){
       inner += `
   <tr>
     <td class="emside">
     </td>`
 
-      for (var j=0;j<agent_zahl;j++){
+      for (var j=0;j<agent_num;j++){
         inner +=`<td id="g${i}c${j}">
       platzhalter
     </td>`
@@ -476,155 +476,155 @@
     table.innerHTML +=  inner;
   }
 
-  function sollAnimieren(){   
-    for (var i=0;i<agent_zahl;i++){
-      var wort = state.reihe[i];
-      if (befehlWert(i,wort)!=0){
+  function shouldAnimate(){   
+    for (var i=0;i<agent_num;i++){
+      var word = state.line[i];
+      if (commandValue(i,word)!=0){
         return true;
       }
     }
   }
 
   function tueTick(){
-    for (var i=0;i<agent_zahl;i++){
-      var wort = state.reihe[i];
-      if (befehlWert(i,wort)!=0){
-        var wert = befehlWert(i,wort);
-        befehlSpalte(i,wert,false);
+    for (var i=0;i<agent_num;i++){
+      var word = state.line[i];
+      if (commandValue(i,word)!=0){
+        var commandValueVar = commandValue(i,word);
+        commandColumn(i,commandValueVar,false);
       }
     }
-    stellZustand();
+    setState();
 
-    if (sollAnimieren()){
-      fangMitAutoAn();
+    if (shouldAnimate()){
+      startWithAnimation();
     } else {
-      gutSchaltfläche.disabled=false;
-      böseSchaltfläche.disabled=false;
-      neuSchaltfläche.disabled=false;
+      goodButton.disabled=false;
+      badButton.disabled=false;
+      newGameButton.disabled=false;
     }
   }
 
-  function fangMitAutoAn(){
-    gutSchaltfläche.disabled=true;
-    böseSchaltfläche.disabled=true;
-    neuSchaltfläche.disabled=true;
+  function startWithAnimation(){
+    goodButton.disabled=true;
+    badButton.disabled=true;
+    newGameButton.disabled=true;
 
     setTimeout(tueTick,100);
   }
 
-  function befehl(wert){
-    for (var i=0;i<agent_zahl;i++){
-      befehlSpalte(i,wert,true);
+  function commandment(commandValueVar){
+    for (var i=0;i<agent_num;i++){
+      commandColumn(i,commandValueVar,true);
     }
     
-    if (sollAnimieren()){
-      fangMitAutoAn();
+    if (shouldAnimate()){
+      startWithAnimation();
     }
 
-    stellZustand();
+    setState();
   }
 
-  function befehlSpalte(agent,wert,hinzufügen){
+  function commandColumn(agent,commandValueVar,add){
     var i=agent;
-    //1 bewege gebote hinunter
+    //1 move down commandments
 
-    // if (hinzufügen){
-    //  for (var j=gebot_zahl-1;j>=0;j--){
-    //    state.gebote[i][j+1]=state.gebote[i][j];
+    // if (add){
+    //  for (var j=command_num-1;j>=0;j--){
+    //    state.commandments[i][j+1]=state.commandments[i][j];
     //  }
     // }
 
-    //2 bewege die aktive Zeile hinunter + set wert
+    //2 move the active row down + set commandValueVar
 
-    var gebotzeil = worte.indexOf(state.reihe[i]);
-    if (hinzufügen){
-      state.gebote[i][gebotzeil][1]=wert;
+    var commandmentLine = words.indexOf(state.line[i]);
+    if (add){
+      state.commandments[i][commandmentLine][1]=commandValueVar;
     }
 
       var delta=0;
-      if (tugendsein(state.reihe[i])){
-        delta=wert;
+      if (isVirtuous(state.line[i])){
+        delta=commandValueVar;
       } else {
-        delta=-wert;
+        delta=-commandValueVar;
       }
 
       {
-        var wort =  state.reihe[i];
+        var word =  state.line[i];
 
         //for every other character
-        for (var o=0;o<agent_zahl;o++){
+        for (var o=0;o<agent_num;o++){
           if (o===agent){
             continue;
           }
 
-          var tugend = tugendsein(wort);
-          var o_does = befehlWert(o,wort);
+          var virtue = isVirtuous(word);
+          var o_does = commandValue(o,word);
           
            // if you fail to do something good that they value, they will punish you
-          if (wert==-1 && tugend===true && o_does===1){
+          if (commandValueVar==-1 && virtue===true && o_does===1){
             delta-=1;
           }
 
           //if you do something evil that they are not allowed to do, they will punish you
-          if (wert==1 && tugend===false && o_does===-1){
+          if (commandValueVar==1 && virtue===false && o_does===-1){
             delta-=1;
           }
         }
         state.healths[i]+=delta;
       }
 
-    //3 bewege die Vorschauzeile hinunter
+    //3 move down the preview line
 
-      state.reihe[i]=state.vor[i][vor_zeile_zahl-1];
+      state.line[i]=state.front[i][front_line_num-1];
 
 
-    //4 bewege Vorschauzeile hinunter
+    //4 move preview line down
 
-      for (var j=vor_zeile_zahl-1;j>=0;j--){
-        state.vor[i][j+1]=state.vor[i][j];
+      for (var j=front_line_num-1;j>=0;j--){
+        state.front[i][j+1]=state.front[i][j];
       }
 
-    //5 neuzeichnen
+    //5 draw again
 
-      state.vor[i][0]=getWort();
+      state.front[i][0]=getWord();
 
 
-    //6 mit der animation anfangen, wenn relevant
+    //6 start animation if relevant
   }
 
-  function aufGutKlicken(){
-    befehl(1);
-  }
-  
-  function aufBöseKlicken(){
-    befehl(-1);
+  function clickOnGood(){
+    commandment(1);
   }
   
-  function aufNeuKlicken(){
-    generiereTabelle();
-    stellZustand();
+  function clickOnBad(){
+    commandment(-1);
+  }
+  
+  function clickOnNew(){
+    generateTable();
+    setState();
   }
 
-  function hüllWort(w,agent){
-    var tugend = tugendsein(w);
+  function euphemism(w,agent){
+    var virtue = isVirtuous(w);
 
     if (agent>=0){
       var delta=0;
 
-      for (var o=0;o<agent_zahl;o++){
+      for (var o=0;o<agent_num;o++){
         if (o===agent){
           continue;
         }
 
-        var o_does = befehlWert(o,w);
+        var o_does = commandValue(o,w);
         
          // if you fail to do something good that they value, they will punish you
-        if (tugend===true && o_does===1){
+        if (virtue===true && o_does===1){
           delta++;
         }
 
         //if you do something evil that they are not allowed to do, they will punish you
-        if (tugend===false && o_does===-1){
+        if (virtue===false && o_does===-1){
           delta++;
         }
       }
@@ -636,30 +636,30 @@
         w+='</sup>';
       }
     }
-    if (tugend){
-      w = `<span class="tugend">${w}</span>`;
+    if (virtue){
+      w = `<span class="virtue">${w}</span>`;
     } else {
-      w = `<span class="laster">${w}</span>`;
+      w = `<span class="vices">${w}</span>`;
     } 
 
     return w; 
   }
 
-  function schließSchaltflächeAn(){
+  function closeButtons(){
 
-    gutSchaltfläche = document.getElementById('goodbutton');
-    böseSchaltfläche = document.getElementById('badbutton');
-    neuSchaltfläche = document.getElementById('newgamebutton');
+    goodButton = document.getElementById('goodbutton');
+    badButton = document.getElementById('badbutton');
+    newGameButton = document.getElementById('newgamebutton');
 
-    gutSchaltfläche.addEventListener("click", aufGutKlicken);
-    böseSchaltfläche.addEventListener("click", aufBöseKlicken);
-    neuSchaltfläche.addEventListener("click", aufNeuKlicken);
+    goodButton.addEventListener("click", clickOnGood);
+    badButton.addEventListener("click", clickOnBad);
+    newGameButton.addEventListener("click", clickOnNew);
 
   }
 
-  generiereTabelle();
-  stellZustand();
-  schließSchaltflächeAn();
+  generateTable();
+  setState();
+  closeButtons();
 
 </script>
 
