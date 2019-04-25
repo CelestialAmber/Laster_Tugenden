@@ -496,7 +496,7 @@
     setState();
 
     if (shouldAnimate()){
-      startWithAnimation();
+      startAnimation();
     } else {
       goodButton.disabled=false;
       badButton.disabled=false;
@@ -504,7 +504,7 @@
     }
   }
 
-  function startWithAnimation(){
+  function startAnimation(){
     goodButton.disabled=true;
     badButton.disabled=true;
     newGameButton.disabled=true;
@@ -518,7 +518,7 @@
     }
     
     if (shouldAnimate()){
-      startWithAnimation();
+      startAnimation();
     }
 
     setState();

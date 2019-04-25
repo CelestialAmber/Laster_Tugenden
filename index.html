@@ -692,7 +692,7 @@ font-weight: normal;
 
 
 		if (shouldAnimate()){
-			startWithAnimation();
+			startAnimation();
 		} else {
 			goodButton.disabled=false;
 			badButton.disabled=false;
@@ -702,7 +702,7 @@ font-weight: normal;
 		setState();
 	}
 
-	function startWithAnimation(){
+	function startAnimation(){
 		goodButton.disabled=true;
 		badButton.disabled=true;
 		newGameButton.disabled=true;
@@ -736,7 +736,7 @@ font-weight: normal;
 		}
 		
 		if (shouldAnimate()){
-			startWithAnimation();
+			startAnimation();
 		}
 
 		if (!lost()){
